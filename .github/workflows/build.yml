@@ -1,0 +1,36 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    timeout-minutes: 60
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        compiler:
+          - pkg: g++-10
+            exe: g++-10
+          - pkg: clang-12
+            exe: clang++-12
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install compiler
+      run: |
+        sudo apt-get update \
+          && sudo apt install -y ${{ matrix.compiler.pkg }} \
+          && sudo rm -rf /var/lib/apt/lists/*
+    - name: Compile cppfront
+      env:
+        CXX: ${{ matrix.compiler.exe }}
+      run: |
+        ${CXX} source/cppfront.cpp -std=c++20 -o /tmp/cppfront
+    - name: Transpiling test
+      run: |
+        /tmp/cppfront passthrough-tests/gcc-10-libstdc++-e.cpp2 -o /tmp/out.cpp
+        diff /tmp/out.cpp passthrough-tests/gcc-10-libstdc++-e.cpp > /tmp/diff.patch
+        [[ "$( wc -l /tmp/diff.patch 2> /dev/null | awk '{print $1}')" -ne 0 ]] && exit 1
+
+
