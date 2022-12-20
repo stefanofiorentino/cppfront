@@ -24,17 +24,20 @@ jobs:
         sudo apt-get update \
           && sudo apt install -y cmake ${{ matrix.compiler.pkg }} \
           && sudo rm -rf /var/lib/apt/lists/*
+        mkdir -p build
     - name: CMake Configure
+      working-directory: build
       env:
         CXX: ${{ matrix.compiler.exe }}
       run: |
         /usr/bin/cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug
     - name: CMake Build
+      working-directory: build
       run: |
-        mkdir -p build
         /usr/bin/cmake --build build --config Debug --target all
     - name: CTest Run
-      run: |                
+      working-directory: build
+      run: |
         /usr/bin/ctest -j1 -C Debug -T test --output-on-failure
 
 
