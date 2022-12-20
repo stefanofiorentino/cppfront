@@ -33,6 +33,6 @@ jobs:
       run: |
         /tmp/cppfront passthrough-tests/${{ matrix.compiler.name }}-libstdc++-e.cpp2 -o /tmp/out.cpp
         diff /tmp/out.cpp passthrough-tests/${{ matrix.compiler.name }}-libstdc++-e.cpp > /tmp/diff.patch
-        [[ "$( wc -l /tmp/diff.patch 2> /dev/null | awk '{print $1}')" -ne 0 ]] && exit 1
+        [[ "$( wc -l /tmp/diff.patch 2> /dev/null | awk '{print $1}')" -ne 0 ]] && (cat /tmp/diff.patch; exit 1)
 
 
