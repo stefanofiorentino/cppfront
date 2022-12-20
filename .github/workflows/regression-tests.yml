@@ -22,7 +22,7 @@ jobs:
     - name: Install compiler
       run: |
         sudo apt-get update \
-          && sudo apt install -y ${{ matrix.compiler.pkg }} \
+          && sudo apt install -y cmake ${{ matrix.compiler.pkg }} \
           && sudo rm -rf /var/lib/apt/lists/*
     - name: CMake Configure
       env:
