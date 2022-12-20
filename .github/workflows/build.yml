@@ -12,8 +12,10 @@ jobs:
         compiler:
           - pkg: g++-10
             exe: g++-10
+            name: gcc-10
           - pkg: clang-12
             exe: clang++-12
+            name: clang-12
 
     steps:
     - uses: actions/checkout@v2
@@ -27,10 +29,10 @@ jobs:
         CXX: ${{ matrix.compiler.exe }}
       run: |
         ${CXX} source/cppfront.cpp -std=c++20 -o /tmp/cppfront       
-    - name: Transpiling ${{ matrix.compiler.pkg }}-libstdc++
+    - name: Transpiling ${{ matrix.compiler.name }}-libstdc++
       run: |
-        /tmp/cppfront passthrough-tests/${{ matrix.compiler.pkg }}-libstdc++-e.cpp2 -o /tmp/out.cpp
-        diff /tmp/out.cpp passthrough-tests/${{ matrix.compiler.pkg }}-libstdc++-e.cpp > /tmp/diff.patch
+        /tmp/cppfront passthrough-tests/${{ matrix.compiler.name }}-libstdc++-e.cpp2 -o /tmp/out.cpp
+        diff /tmp/out.cpp passthrough-tests/${{ matrix.compiler.name }}-libstdc++-e.cpp > /tmp/diff.patch
         [[ "$( wc -l /tmp/diff.patch 2> /dev/null | awk '{print $1}')" -ne 0 ]] && exit 1
 
 
