@@ -1,0 +1,40 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    timeout-minutes: 60
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        compiler:
+          - pkg: g++-10
+            exe: g++-10
+            name: gcc-10
+          - pkg: clang-12
+            exe: clang++-12
+            name: clang-12
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install compiler
+      run: |
+        sudo apt-get update \
+          && sudo apt install -y ${{ matrix.compiler.pkg }} \
+          && sudo rm -rf /var/lib/apt/lists/*
+    - name: CMake Configure
+      env:
+        CXX: ${{ matrix.compiler.exe }}
+      run: |
+        /usr/bin/cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug
+    - name: CMake Build
+      run: |
+        mkdir -p build
+        /usr/bin/cmake --build build --config Debug --target all
+    - name: CTest Run
+      run: |                
+        /usr/bin/ctest -j1 -C Debug -T test --output-on-failure
+
+
