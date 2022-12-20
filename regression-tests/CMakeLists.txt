@@ -16,14 +16,14 @@ foreach(REGRESSION_TEST_CPP2 ${REGRESSION_TESTS_CPP2})
     endif()
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test-results/${REGRESSION_TEST_BASE_NAME}.cpp)
         add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${REGRESSION_TEST_BASE_NAME}.cpp
-            COMMAND ${PROJECT_NAME}
-            ARGS -n -s ${PURE_CPP2} ${REGRESSION_TEST_CPP2}
+            OUTPUT ${CMAKE_BINARY_DIR}/${REGRESSION_TEST_BASE_NAME}.cpp
+            COMMAND ${PROJECT_NAME} 
+            ARGS -n -s ${PURE_CPP2} ${REGRESSION_TEST_CPP2} -o ${CMAKE_BINARY_DIR}/${REGRESSION_TEST_BASE_NAME}.cpp
             DEPENDS ${PROJECT_NAME}
         )
         add_executable(
             ${REGRESSION_TEST_BASE_NAME}
-            ${CMAKE_CURRENT_SOURCE_DIR}/${REGRESSION_TEST_BASE_NAME}.cpp
+            ${CMAKE_BINARY_DIR}/${REGRESSION_TEST_BASE_NAME}.cpp
         )
         target_include_directories(
             ${REGRESSION_TEST_BASE_NAME}
