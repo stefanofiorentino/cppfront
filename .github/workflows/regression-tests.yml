@@ -32,6 +32,7 @@ jobs:
       run: |
         /usr/bin/cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug ..
     - name: CMake Build
+      working-directory: build
       run: |
         /usr/bin/cmake --build build --config Debug --target all
     - name: CTest Run
