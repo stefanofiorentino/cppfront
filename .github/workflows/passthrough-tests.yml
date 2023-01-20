@@ -28,12 +28,12 @@ jobs:
       env:
         CXX: ${{ matrix.compiler.exe }}
       run: |
-        ${CXX} source/cppfront.cpp -std=c++20 -o /tmp/cppfront       
+        ${CXX} source/cppfront.cpp -std=c++20 -o /tmp/cppfront
     - name: Transpiling ${{ matrix.compiler.name }}-libstdc++
       run: |
         /tmp/cppfront passthrough-tests/${{ matrix.compiler.name }}-libstdc++-e.cpp2 -o /tmp/out.cpp
     - name: Return error in case of differences
-      run: |                
+      run: |
         if diff /tmp/out.cpp passthrough-tests/${{ matrix.compiler.name }}-libstdc++-e.cpp; then echo 'No difference'; else exit 1; fi
 
 
