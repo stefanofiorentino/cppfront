@@ -1,0 +1,13 @@
+main: () -> int = {
+    answers_to_everything := std::vector<int>();
+    int_max := std::numeric_limits<int>::max();
+    fill( out answers_to_everything, int_max, 42);
+}
+
+fill: (
+    out x: std::vector<int>,
+    in count: int,
+    in value: int 
+    ) = {
+        x = std::vector<int>(count, value);
+}
