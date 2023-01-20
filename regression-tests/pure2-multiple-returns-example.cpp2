@@ -1,0 +1,12 @@
+
+f: () -> (size: std::size_t, data: std::string) = {
+    size = 0;
+    data = "";
+}
+
+main: () -> int = {
+    res := f();
+    res.size;
+    res.data;
+    return 0;
+}
