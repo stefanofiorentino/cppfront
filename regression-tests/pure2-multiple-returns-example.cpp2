@@ -1,12 +1,14 @@
 
-f: () -> (size: std::size_t, data: std::string) = {
-    size = 0;
-    data = "";
+f: () -> (
+    age: std::size_t, 
+    name: std::string
+    ) = {
+    age = 38;
+    name = "Stefano";
 }
 
 main: () -> int = {
     res := f();
-    res.size;
-    res.data;
+    std::cout << res.name << " is " << std::to_string(res.age) << " years old." << std::endl;
     return 0;
 }
