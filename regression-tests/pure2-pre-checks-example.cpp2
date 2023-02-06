@@ -1,7 +1,11 @@
 main: () -> int = {
+    cpp2::Bounds.set_handler(handler&);
+
     answers_to_everything := std::vector<int>();
     int_max := std::numeric_limits<int>::max();
-    fill( out answers_to_everything, int_max, 42);
+    fill( out answers_to_everything, 42, int_max);
+
+    std::cout << answers_to_everything[42] << "\n";
 }
 
 fill: (
@@ -10,4 +14,9 @@ fill: (
     in value: int 
     ) = {
         x = std::vector<int>(count, value);
+}
+
+handler: (msg: * const char) = {
+    std::cerr << "Error detected: " << msg << "\n";
+    std::_Exit(1);
 }
