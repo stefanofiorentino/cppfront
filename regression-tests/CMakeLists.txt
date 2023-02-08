@@ -14,6 +14,11 @@ foreach(REGRESSION_TEST_CPP2 ${REGRESSION_TESTS_CPP2})
     if(${REGRESSION_TEST_BASE_NAME} MATCHES "^pure2-")
         set(PURE_CPP2 -p)
     endif()
+    if(${REGRESSION_TEST_BASE_NAME} MATCHES ".*-failing-example.*$")
+        set(SHALL_FAIL ON)
+    else()
+        set(SHALL_FAIL OFF)
+    endif()
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test-results/${REGRESSION_TEST_BASE_NAME}.cpp)
         add_custom_command(
             OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${REGRESSION_TEST_BASE_NAME}.cpp
@@ -37,10 +42,17 @@ foreach(REGRESSION_TEST_CPP2 ${REGRESSION_TESTS_CPP2})
             cxx_std_20
         )
         if (NOT ";${CHILD_ABORTED_EXES};" MATCHES ";${REGRESSION_TEST_BASE_NAME};")
-            add_test(
-                NAME ctest-${REGRESSION_TEST_BASE_NAME}
-                COMMAND $<TARGET_FILE:${REGRESSION_TEST_BASE_NAME}>
-            )
+            if (SHALL_FAIL)
+                add_test(
+                    NAME ctest-${REGRESSION_TEST_BASE_NAME}-shall-fail
+                    COMMAND /bin/bash ${CMAKE_SOURCE_DIR}/scripts/shall_fail.sh $<TARGET_FILE:${REGRESSION_TEST_BASE_NAME}>
+                )
+            else()
+                add_test(
+                    NAME ctest-${REGRESSION_TEST_BASE_NAME}
+                    COMMAND $<TARGET_FILE:${REGRESSION_TEST_BASE_NAME}>
+                )
+            endif()
         endif()
     endif()
 endforeach()
